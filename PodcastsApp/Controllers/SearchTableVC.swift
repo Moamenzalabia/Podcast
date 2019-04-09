@@ -10,35 +10,39 @@ class SearchTableVC: UITableViewController, UISearchBarDelegate {
     
     var podcasts = [Podcast]()
     let cellId = "cellId"
+    var timer: Timer?
+    
+    // lets implement a UISearchContoller
+    let searchController = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupSearchBar()
         setupTableView()
+        searchBar(searchController.searchBar, textDidChange: "Voong")
         
     }
-
+    
     fileprivate func setupSearchBar() {
         
         self.definesPresentationContext = true
-        // lets implement a UISearchContoller
-        let searchController = UISearchController(searchResultsController: nil)
+        navigationItem.searchController = searchController
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
-        
-        navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
+        
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       
-        APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
-            
-            self.podcasts = podcasts
-            self.tableView.reloadData()
-            
-        }
+        
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
+            APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
+                self.podcasts = podcasts
+                self.tableView.reloadData()
+                
+            }
+        })
         
     }
     
@@ -76,11 +80,10 @@ class SearchTableVC: UITableViewController, UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return podcasts.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
-        
         let podcast = podcasts[indexPath.row]
         cell.podcast = podcast
         return cell

@@ -8,6 +8,7 @@ import Foundation
 
 extension String {
     
+    // to replace any http to https to avoid securaty excepation's
     func toSecureHTTPS() -> String {
         return self.contains("https") ? self :
                  self.replacingOccurrences(of: "http", with: "https")

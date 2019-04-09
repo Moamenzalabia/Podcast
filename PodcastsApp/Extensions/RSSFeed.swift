@@ -6,6 +6,7 @@
 
 import FeedKit
 
+// this to get episodes array for itunes items it and it's image to display it in search tableview
 extension RSSFeed {
     
     func toEpisodes() -> [Episode] {

@@ -8,7 +8,6 @@ import SDWebImage
 
 class PodcastCell: UITableViewCell {
 
-    
     @IBOutlet weak var podcastImageView: UIImageView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
@@ -20,17 +19,17 @@ class PodcastCell: UITableViewCell {
         trackNameLabel.text = podcast.trackName
         artistNameLabel.text = podcast.artistName
         episodeCountLabel.text = "\(podcast.trackCount ?? 0) Episodes"
-
         guard let  stringUrl = podcast.artworkUrl60 else{ return }
         downloadImages(stringUrl: stringUrl)
-            
       }
-    }
-    override func awakeFromNib() {
-        super.awakeFromNib()
-       
+        
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    // download podcastImage
     fileprivate func downloadImages(stringUrl: String) {
         guard let url = URL(string: stringUrl) else { return }
         /*
@@ -43,8 +42,6 @@ class PodcastCell: UITableViewCell {
         }.resume()
         */
         podcastImageView.sd_setImage(with: url, completed: nil) 
-        
-        
     }
 
 }
